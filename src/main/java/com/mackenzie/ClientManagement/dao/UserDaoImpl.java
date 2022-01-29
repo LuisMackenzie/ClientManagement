@@ -1,6 +1,8 @@
 package com.mackenzie.ClientManagement.dao;
 
 import com.mackenzie.ClientManagement.models.Usuario;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,17 +39,17 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public boolean verifyAuth(Usuario user) {
-        String query = "FROM Usuario WHERE email = :email AND pass = :pass";
+        String query = "FROM Usuario WHERE email = :email";
         List<Usuario> list = manager.createQuery(query)
                 .setParameter("email", user.getEmail())
-                .setParameter("pass", user.getPass())
                 .getResultList();
 
-       /* if (list.isEmpty()) {
+        if (list.isEmpty()) {
             return false;
-        } else {
-            return true;
-        }*/
-        return !list.isEmpty();
+        }
+        String hashedPass = list.get(0).getPass();
+
+        Argon2 argon = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        return argon.verify(hashedPass, user.getPass());
     }
 }

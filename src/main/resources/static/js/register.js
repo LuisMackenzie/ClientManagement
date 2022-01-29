@@ -31,6 +31,8 @@ async function registerNewUser() {
       });
       // const newUser = await request.json();
 
+        alert("The account has been created!")
+        window.location.href = 'login.html'
 
 
 }

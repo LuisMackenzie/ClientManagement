@@ -2,6 +2,8 @@ package com.mackenzie.ClientManagement.controllers;
 
 import com.mackenzie.ClientManagement.dao.UserDao;
 import com.mackenzie.ClientManagement.models.Usuario;
+import de.mkammerer.argon2.Argon2;
+import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +35,9 @@ public class UsuarioController {
 
     @RequestMapping(value = "api/users", method = RequestMethod.POST)
     public void registerUser(@RequestBody Usuario user) {
+        Argon2 argon = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+        String hash = argon.hash(1, 1024, 1, user.getPass());
+        user.setPass(hash);
         dao.registerUser(user);
     }
 
