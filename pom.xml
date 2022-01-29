@@ -52,6 +52,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
+			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/de.mkammerer/argon2-jvm -->
 		<dependency>
@@ -59,6 +60,13 @@
 			<artifactId>argon2-jvm</artifactId>
 			<version>2.11</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
 
 
 	</dependencies>
