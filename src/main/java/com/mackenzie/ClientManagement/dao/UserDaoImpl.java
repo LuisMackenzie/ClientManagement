@@ -38,18 +38,21 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
-    public boolean verifyAuth(Usuario user) {
+    public Usuario verifyUserAuth(Usuario user) {
         String query = "FROM Usuario WHERE email = :email";
         List<Usuario> list = manager.createQuery(query)
                 .setParameter("email", user.getEmail())
                 .getResultList();
 
         if (list.isEmpty()) {
-            return false;
+            return null;
         }
         String hashedPass = list.get(0).getPass();
 
         Argon2 argon = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
-        return argon.verify(hashedPass, user.getPass());
+        if (argon.verify(hashedPass, user.getPass())) {
+            return list.get(0);
+        }
+        return null;
     }
 }

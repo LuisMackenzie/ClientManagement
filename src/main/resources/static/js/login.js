@@ -15,24 +15,26 @@ async function loginUser() {
       // aqui hacemos la solicitud de tipo GET
       const request = await fetch('api/login', {
         method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
+        headers: getHeaders(),
         body: JSON.stringify(data)
       });
-      const response = await request.text();
 
-      if (response == "OK") {
+      const response = await request.text();
+      if (response != "FAIL") {
+        localStorage.token = response
+        localStorage.email = data.email
         window.location.href = 'users.html'
       } else {
         alert("Las credenciales son incorrectas")
       }
+}
 
-
-
-
-
+function getHeaders() {
+    return {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.token
+    };
 }
 
 function info() {

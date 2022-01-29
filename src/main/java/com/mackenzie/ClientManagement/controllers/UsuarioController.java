@@ -2,6 +2,7 @@ package com.mackenzie.ClientManagement.controllers;
 
 import com.mackenzie.ClientManagement.dao.UserDao;
 import com.mackenzie.ClientManagement.models.Usuario;
+import com.mackenzie.ClientManagement.utils.JWTUtil;
 import de.mkammerer.argon2.Argon2;
 import de.mkammerer.argon2.Argon2Factory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,11 @@ public class UsuarioController {
     @Autowired
     private UserDao dao;
 
+    @Autowired
+    private JWTUtil util;
+
     @RequestMapping(value = "api/users/{id}", method = RequestMethod.GET)
-    public Usuario getUsuario(@PathVariable long id) {
+    public Usuario getAuthUser(@PathVariable long id) {
         Usuario user = new Usuario();
         user.setId(id);
         user.setName("Lucas");
@@ -29,8 +33,14 @@ public class UsuarioController {
     }
 
     @RequestMapping(value = "api/users", method = RequestMethod.GET)
-    public List<Usuario> getAllUsers() {
+    public List<Usuario> getAllUsers(@RequestHeader(value="Authorization") String token) {
+        if (!validateToken(token)) {return null;}
         return dao.getUsers();
+    }
+
+    private boolean validateToken(String token) {
+        String userId = util.getKey(token);
+        return userId != null;
     }
 
     @RequestMapping(value = "api/users", method = RequestMethod.POST)
@@ -53,7 +63,8 @@ public class UsuarioController {
     }
 
     @RequestMapping(value = "api/users/{id}", method = RequestMethod.DELETE)
-    public void deleteUsuario(@PathVariable Long id) {
+    public void deleteUsuario(@RequestHeader(value="Authorization") String token, @PathVariable Long id) {
+        if (!validateToken(token)) {return;}
         dao.delete(id);
 
     }

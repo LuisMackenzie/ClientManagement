@@ -12,5 +12,5 @@ public interface UserDao {
 
     public abstract void registerUser(Usuario user);
 
-    public abstract boolean verifyAuth(Usuario user);
+    public abstract Usuario verifyUserAuth(Usuario user);
 }
